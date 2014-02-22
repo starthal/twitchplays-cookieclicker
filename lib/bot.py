@@ -8,9 +8,6 @@ from lib.gui import command, set_reset_bar, set_pledge_bar
 
 class Bot:
 
-    reset_counter = 0
-    pledge_counter = 0
-
     def __init__(self):
         self.config = config
         self.irc = Irc(config)
@@ -67,11 +64,11 @@ class Bot:
                             name = self.game.upgrade_name(upgrade_ind)
                             if name == 'Elder Pledge' or name == 'Elder Covenant' or name == 'Revoke Elder Covenant':
                               # Throttle pledges if necessary
-                              self.pledge_counter += 1
-                              if self.pledge_counter >= pledge_counter_max:
+                              pledge_counter += 1
+                              if pledge_counter >= pledge_counter_max:
                                 self.cc.buy_upgrade(upgrade_ind)
-                                self.pledge_counter = 0
-                              set_pledge_bar(self.pledge_counter)
+                                pledge_counter = 0
+                              set_pledge_bar(pledge_counter)
                               button = 'Pledge/Cov'
                               suffix = '({0}/{1})'.format(pledge_counter,pledge_counter_max)
                             else:
@@ -94,6 +91,8 @@ class Bot:
                       if numclicks > 9:
                         numclicks = 9
                       reset_counter -= numclicks
+                      if reset_counter < 0:
+                              reset_counter = 0
                       self.game.push_button("click%d" % numclicks)
                       command(username, "click(%d)" % numclicks)
                         
