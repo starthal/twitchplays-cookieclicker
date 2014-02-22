@@ -17,7 +17,7 @@ config = {
     
     'pledge_bar': {
 		'enable' : True,
-		'max' : 10,
+		'max' : 50,
 		'vote' : 1,
 	},
 }
