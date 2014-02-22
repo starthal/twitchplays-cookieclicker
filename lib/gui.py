@@ -55,9 +55,8 @@ def run():
     plabel = Label(master, text="Pledge\nCov", background = 'black', foreground='white')
     plabel.grid(row=2, column=2, sticky=W+E+N+S)
 
-    #timer = Timer(config['pop_timer']['hours'],config['pop_timer']['minutes'],config['pop_timer']['seconds'])
-    timer = Timer(0, 0, 5)
-    timerpanel = Text (master, font=("Helvetica",32), background='#1E506F', foreground='white', width=10, height=1)
+    timer = Timer(config['pop_timer']['hours'],config['pop_timer']['minutes'],config['pop_timer']['seconds'])   
+    timerpanel = Text (master, font=("Helvetica",28), background='#1E506F', foreground='white', width=10, height=1)
     timerpanel.tag_configure('center', justify='center')
         
     timerpanel.grid(row=0, column=0, columnspan=3, stick=W+E)
