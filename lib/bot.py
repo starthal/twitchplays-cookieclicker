@@ -90,9 +90,9 @@ class Bot:
                     if numclicks > 0:
                       if numclicks > 9:
                         numclicks = 9
-                      reset_counter -= numclicks
+                      reset_counter -= 1 #numclicks?
                       if reset_counter < 0:
                               reset_counter = 0
                       self.game.push_button("click%d" % numclicks)
                       command(username, "click(%d)" % numclicks)
-                        
+                      set_reset_bar(reset_counter)                        
