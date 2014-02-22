@@ -50,9 +50,7 @@ class CookieControl:
       self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.sock.settimeout(0.5)
       self.sock.connect((self.TCP_IP, self.TCP_PORT))
-      #Disable "One Mind" popup and autokill wrinklers every 5 hours
-      self.send_js("Game.Upgrades['One mind'].clickFunction = null") 
-      self.send_js("if (!wrinklerkiller) {wrinklerkiller = setInterval(function() { for (var i=0;i<10;i++) { if (Game.wrinklers[i].close==1) {Game.wrinklers[i].hp = 0}}}, 18000000);}")
+      self.send_js("Game.Upgrades['One mind'].clickFunction = null") #Disable "One Mind" popup
     except:
       print('Could not connect. Make sure FF Remote Control is running on port 32000')
       self.sock.close()
