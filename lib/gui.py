@@ -12,7 +12,7 @@ def set_reset_bar(reset_counter):
 
 def command(username, command):
     global w4    
-    w4.insert(END, '\n{0:<25s} {1:>24s}'.format(username[:25], command[:24]))
+    w4.insert(END, '\n{0:<25s} {1:>24s}'.format(username[:25], command[:14]))
     w4.see(END)
 
 def run():
@@ -21,12 +21,12 @@ def run():
     global pscroll
     
     master = Tk()
-    w4 = Text (master, background='black', foreground='white', width=36, height=10)
+    w4 = Text (master, background='black', foreground='red', width=40, height=10)
     w4.insert(INSERT, "-----START-----")
     w4.pack(fill=BOTH, expand=1, side=LEFT)
     
     rscroll_max = config['reset_bar']['max']
-    rscroll = Scale(master, from_=rscroll_max, to=0, borderwidth=0, background='black', foreground='white', troughcolor='white')
+    rscroll = Scale(master, from_=rscroll_max, to=0, borderwidth=0, background='black', foreground='white', troughcolor='red')
     rscroll.pack(fill=BOTH, expand=0, side=RIGHT)
     
     if config['pledge_bar']['enable']:
