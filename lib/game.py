@@ -33,7 +33,7 @@ class Game:
     'view',
     'expand',
     'collapse',
-    'restart',
+    'reset',
     'continue',
     #'unwrinkle',
   }
@@ -54,48 +54,52 @@ class Game:
     if not self.locked :
       self.locked = True
       
-    if button == 'restart': # Bot has decided it's time to soft reset
-      self.cc.soft_reset()
-    elif button == 'click':
-      self.cc.click_cookie()
-    elif button == 'golden':
-      self.cc.click_golden()
-    elif button == 'reindeer':
-      self.cc.click_reindeer()
-    elif button in self.cc.BLDGS:
-      self.cc.buy_building(button)
-    elif button[:7] == 'upgrade':
-      # Last char of the button is the upgrade number, but array starts at 0
-      if len(button) == 7:
-        upgrade_ind = 0
-      else:
-          upgrade_ind = int(button[7])-1
-      # Check if upgrade is pledge
-      name = self.cc.upgrade_name(upgrade_ind)
-      if name == 'Elder Pledge' or name == 'Elder Covenant':
-        # Throttle pledges if necessary
-        self.pledge_counter += 1
-        if self.pledge_counter >= pledge_max:
+      if button == 'reset': # Bot has decided it's time to soft reset
+        self.cc.soft_reset()
+      elif button[:5] == 'click':
+        if len(button) == 5:
+          self.cc.click_cookie()
+        else:
+          for x in range(0, int(button[5])):
+            self.cc.click_cookie()
+      elif button == 'golden':
+        self.cc.click_golden()
+      elif button == 'reindeer':
+        self.cc.click_reindeer()
+      elif button in self.cc.BLDGS:
+        self.cc.buy_building(button)
+      elif button[:7] == 'upgrade':
+        # Last char of the button is the upgrade number, but array starts at 0
+        if len(button) == 7:
+          upgrade_ind = 0
+        else:
+            upgrade_ind = int(button[7])-1
+        # Check if upgrade is pledge
+        name = self.cc.upgrade_name(upgrade_ind)
+        if name == 'Elder Pledge' or name == 'Elder Covenant':
+          # Throttle pledges if necessary
+          self.pledge_counter += 1
+          if self.pledge_counter >= pledge_max:
+            self.cc.buy_upgrade(upgrade_ind)
+            self.pledge_counter = 0
+          set_pledge_bar(self.pledge_counter)          
+        else:
           self.cc.buy_upgrade(upgrade_ind)
-          self.pledge_counter = 0
-        set_pledge_bar(self.pledge_counter)          
-      else:
-        self.cc.buy_upgrade(upgrade_ind)
-    elif button == 'scrollup':
-      self.cc.scroll_up()
-    elif button == 'scrolldown':
-      self.cc.scroll_down()
-    elif button == 'view':
-      self.cc.toggle_stats()
-    elif button == 'view':
-      self.cc.toggle_stats()
-    elif button == 'expand':
-      self.cc.expand_store()
-    elif button == 'collapse':
-      self.cc.collapse_store()
-    elif button == 'unwrinkle':
-	    self.cc.pop_all_wrinklers()
-    elif button == 'dunk':
-      self.cc.dunk_cookie()
-    self.locked = False
+      elif button == 'scrollup':
+        self.cc.scroll_up()
+      elif button == 'scrolldown':
+        self.cc.scroll_down()
+      elif button == 'view':
+        self.cc.toggle_stats()
+      elif button == 'view':
+        self.cc.toggle_stats()
+      elif button == 'expand':
+        self.cc.expand_store()
+      elif button == 'collapse':
+        self.cc.collapse_store()
+      elif button == 'unwrinkle':
+        self.cc.pop_all_wrinklers()
+      elif button == 'dunk':
+        self.cc.dunk_cookie()
+      self.locked = False
 
