@@ -58,21 +58,21 @@ class Bot:
                         if reset_counter < 0:
                             reset_counter = 0
                         if len(button) == 7:
-                            self.game.push_button(button)
+                            upgrade_ind = 0
                         else:
                             upgrade_ind = int(button[7])-1
-                            name = self.game.upgrade_name(upgrade_ind)
-                            if name == 'Elder Pledge' or name == 'Elder Covenant' or name == 'Revoke Elder Covenant':
-                              # Throttle pledges if necessary
-                              pledge_counter += 1
-                              if pledge_counter >= pledge_counter_max:
-                                self.cc.buy_upgrade(upgrade_ind)
-                                pledge_counter = 0
-                              set_pledge_bar(pledge_counter)
-                              button = 'Pledge/Cov'
-                              suffix = '({0}/{1})'.format(pledge_counter,pledge_counter_max)
-                            else:
-                              self.game.push_button(button)
+                        name = self.game.upgrade_name(upgrade_ind)
+                        if name == 'Elder Pledge' or name == 'Elder Covenant' or name == 'Revoke Elder Covenant':
+                          # Throttle pledges if necessary
+                          pledge_counter += 1
+                          if pledge_counter >= pledge_counter_max:
+                            self.cc.buy_upgrade(upgrade_ind)
+                            pledge_counter = 0
+                          set_pledge_bar(pledge_counter)
+                          button = 'Pledge/Cov'
+                          suffix = '({0}/{1})'.format(pledge_counter,pledge_counter_max)
+                        else:
+                          self.game.push_button(button)
                     else:
                         reset_counter -= 1
                         if reset_counter < 0:
