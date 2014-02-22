@@ -20,6 +20,7 @@ class CookieControl:
   TCP_IP = '127.0.0.1'
   TCP_PORT = 32000 # You can change this port in the FF Remote Control settings
   SCROLL_AMOUNT = 300 # Amount to scroll on scroll_up and scroll_down commands
+  last_send = -10 #Arbitrary neg number as nothing has been sent yet
 
   # Dict of building IDs.
   BLDGS = {
@@ -59,7 +60,11 @@ class CookieControl:
     self.sock.close()
 
   def send_js(self, js_line):
+    elapsedtime = time.clock() - self.last_send #Cannot send JS too fast, has to throttle
+    if (elapsedtime < .1):
+      time.sleep(.1 - elapsedtime)
     self.sock.send(js_line)
+    self.last_send = time.clock()
     return self.sock.recv(4096)
 
   def click_cookie(self):

@@ -41,12 +41,12 @@ class Bot:
                 username = message['username'].lower()
                 suffix = ''
                 if self.game.is_valid_button(button):
-                    if button == 'restart' or button == 'continue': 
-                        if button == 'restart':
+                    if button == 'reset' or button == 'continue': 
+                        if button == 'reset':
                             reset_counter += 5
                             if reset_counter >= reset_counter_max:
                                 reset_counter = 0
-                                self.game.push_button('restart')
+                                self.game.push_button('reset')
                         else:
                             reset_counter -= 5
                             if reset_counter < 0:
@@ -64,3 +64,12 @@ class Bot:
                         self.game.push_button(button)
                     command(username, button + suffix)
                     set_reset_bar(reset_counter)
+                else:
+                    numclicks = button.count("click")
+                    if numclicks > 0:
+                      if numclicks > 9:
+                        numclicks = 9
+                      reset_counter -= numclicks
+                      self.game.push_button("click%d" % numclicks)
+                      command(username, "click(%d)" % numclicks)
+                        
