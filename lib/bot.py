@@ -66,7 +66,7 @@ class Bot:
                           # Throttle pledges if necessary
                           pledge_counter += 1
                           if pledge_counter >= pledge_counter_max:
-                            self.game.push_button(upgrade_ind)
+                            self.game.push_button(button)
                             pledge_counter = 0
                           set_pledge_bar(pledge_counter)
                           button = 'Pledge/Cov'
