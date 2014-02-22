@@ -20,6 +20,7 @@ class CookieControl:
   TCP_IP = '127.0.0.1'
   TCP_PORT = 32000 # You can change this port in the FF Remote Control settings
   SCROLL_AMOUNT = 300 # Amount to scroll on scroll_up and scroll_down commands
+  last_send = -10 #Arbitrary neg number as nothing has been sent yet
 
   # Dict of building IDs.
   BLDGS = {
@@ -49,6 +50,9 @@ class CookieControl:
       self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.sock.settimeout(0.5)
       self.sock.connect((self.TCP_IP, self.TCP_PORT))
+      #Disable "One Mind" popup and autokill wrinklers every 5 hours
+      self.send_js("Game.Upgrades['One mind'].clickFunction = null") 
+      self.send_js("if (!wrinklerkiller) {wrinklerkiller = setInterval(function() { for (var i=0;i<10;i++) { if (Game.wrinklers[i].close==1) {Game.wrinklers[i].hp = 0}}}, 18000000);}")
     except:
       print('Could not connect. Make sure FF Remote Control is running on port 32000')
       self.sock.close()
@@ -59,7 +63,11 @@ class CookieControl:
     self.sock.close()
 
   def send_js(self, js_line):
+    elapsedtime = time.clock() - self.last_send #Cannot send JS too fast, has to throttle
+    if (elapsedtime < .1):
+      time.sleep(.1 - elapsedtime)
     self.sock.send(js_line)
+    self.last_send = time.clock()
     return self.sock.recv(4096)
 
   def click_cookie(self):

@@ -6,8 +6,8 @@ config = {
     },
 
     'account': {
-        #'username': 'username',
-        #'password': 'oauth:key' # http://twitchapps.com/tmi/
+        'username': 'pk_kolo9',
+        'password': 'oauth:sekjbjdmxvvzn67dhbj3t1i08fz241l' # http://twitchapps.com/tmi/
     },
 
     'reset_bar': {
