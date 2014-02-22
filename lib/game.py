@@ -35,6 +35,7 @@ class Game:
     'reset',
     'continue',
     #'unwrinkle',
+    #'dunk',
   }
   
   locked = False
