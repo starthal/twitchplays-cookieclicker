@@ -76,10 +76,10 @@ class Game:
             upgrade_ind = int(button[7])-1
         # Check if upgrade is pledge
         name = self.cc.upgrade_name(upgrade_ind)
-        if name == 'Elder Pledge' or name == 'Elder Covenant':
+        if name == 'Elder Pledge' or name == 'Elder Covenant' or name == 'Revoke Elder Covenant':
           # Throttle pledges if necessary
           self.pledge_counter += 1
-          if self.pledge_counter >= pledge_max:
+          if self.pledge_counter >= self.pledge_max:
             self.cc.buy_upgrade(upgrade_ind)
             self.pledge_counter = 0
           set_pledge_bar(self.pledge_counter)          
