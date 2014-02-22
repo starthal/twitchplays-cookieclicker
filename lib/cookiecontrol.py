@@ -68,7 +68,11 @@ class CookieControl:
       time.sleep(.1 - elapsedtime)
     self.sock.send(js_line)
     self.last_send = time.clock()
-    return self.sock.recv(4096)
+    try:
+      ret = self.sock.recv(4096)
+    except:
+      ret = ''
+    return ret
 
   def click_cookie(self):
     self.send_js('Game.ClickCookie()')
@@ -94,12 +98,12 @@ class CookieControl:
     self.send_js('Game.UpgradesInStore[{0}].buy()'.format(upgrade_index))
 
   def upgrade_name(self, upgrade_index):
-	jstr = self.send_js('Game.UpgradesInStore[{0}].name'.format(upgrade_index))
-	try:
-	  name = json.loads(jstr)['result']
-	except KeyError:
-	  name = 'x'
-	return name
+    jstr = self.send_js('Game.UpgradesInStore[{0}].name'.format(upgrade_index))
+    try:
+      name = json.loads(jstr)['result']
+    except KeyError:
+      name = 'x'
+    return name
 
   def pop_all_wrinklers(self):
     self.send_js('Game.CollectWrinklers()')
@@ -120,7 +124,7 @@ class CookieControl:
     self.send_js('document.getElementById("upgrades").style.height="60px"')
     
   def dunk_cookie(self):
-	self.send_js('Game.Win("Cookie-dunker")')
+    self.send_js('Game.Win("Cookie-dunker")')
 
   def soft_reset(self):
     # Export save.
@@ -130,6 +134,13 @@ class CookieControl:
     self.backup_save(save_str)
     # Passing the argument 1 bypasses the confirmation dialog
     self.send_js('Game.Reset(1)')
+    hc_calc_js = (  'var prestige=0;'
+                    'if (Game.prestige.ready) prestige=Game.prestige["Heavenly chips"];'
+                    'Game.prestige=[];'
+                    'Game.CalculatePrestige();'
+                    'prestige=Game.prestige["Heavenly chips"]-prestige;'
+                    'if (prestige!=0) Game.Popup("You earn "+prestige+" heavenly chip"+(prestige==1?"":"s")+"!");')
+    self.send_js(hc_calc_js)
 
   def __init__(self):
     self.init_control()
