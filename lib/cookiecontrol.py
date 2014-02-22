@@ -64,8 +64,8 @@ class CookieControl:
 
   def send_js(self, js_line):
     elapsedtime = time.clock() - self.last_send #Cannot send JS too fast, has to throttle
-    if (elapsedtime < .1):
-      time.sleep(.1 - elapsedtime)
+    if (elapsedtime < .05):
+      time.sleep(.05 - elapsedtime)
     self.sock.send(js_line)
     self.last_send = time.clock()
     try:
