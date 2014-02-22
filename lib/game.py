@@ -69,7 +69,10 @@ class Game:
       elif button in self.cc.BLDGS:
         self.cc.buy_building(button)
       elif button[:7] == 'upgrade':
-        self.cc.buy_upgrade(upgrade_ind)
+        if len(button) == 7:
+          self.cc.buy_upgrade(0)
+        else:
+          self.cc.buy_upgrade(int(button[7])-1)
       elif button == 'scrollup':
         self.cc.scroll_up()
       elif button == 'scrolldown':
