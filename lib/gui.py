@@ -12,7 +12,7 @@ def set_reset_bar(reset_counter):
 
 def command(username, command):
     global w4    
-    w4.insert(END, '\n{0:<25s} {1:>14s}'.format(username[:25], command[:14]))
+    w4.insert(END, '\n{0:<25s} {1:>19s}'.format(username[:25], command[:19]))
     w4.see(END)
 
 def run():
@@ -22,7 +22,7 @@ def run():
     
     master = Tk()
     master.configure(background='pink')
-    w4 = Text (master, background='#1E506F', foreground='white', width=40, height=10)
+    w4 = Text (master, background='#1E506F', foreground='white', width=45, height=10)
     w4.insert(INSERT, "-----START-----")
     w4.grid(row=0, rowspan=2, column=0, sticky=W+E+N+S)
     
