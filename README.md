@@ -6,4 +6,4 @@ IRC bot and controller for playing Cookie Clicker in a crowd-controlled Twitch s
 Authors:
 ----
 * aidraj0 (original IRC bot and game controller)
-* Pk_Kolo9, starthal (Cookie Clicker customization)
+* Kolo9, starthal (Cookie Clicker customization)
