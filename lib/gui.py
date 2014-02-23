@@ -21,7 +21,7 @@ def command(username, command):
 def start_timer(timer):
     global timerpanel
     while True:
-        time.sleep(.01)
+        time.sleep(1)
         timerpanel.delete(1.0, END)
         timerpanel.insert(INSERT, "Pop in "+timer.update_time(), 'center')
 
