@@ -1,15 +1,14 @@
 from config.config import config
-import cookiecontrol
 
 class Timer():
-    def __init__ (self, hour, minute, second):
+    def __init__ (self, cc, hour, minute, second):        
         self.hour=hour
         self.minute=minute
         self.second=second+1
 
         self.update_time()
 
-        self.cc = cookiecontrol.CookieControl()
+        self.cc = cc
 
     def update_time (self):
         hour = self.hour
