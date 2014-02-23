@@ -21,6 +21,7 @@ class CookieControl:
   TCP_PORT = 32000 # You can change this port in the FF Remote Control settings
   SCROLL_AMOUNT = 300 # Amount to scroll on scroll_up and scroll_down commands
   last_send = -10 #Arbitrary neg number as nothing has been sent yet
+  dungeon_entered = False
 
   # Dict of building IDs.
   BLDGS = {
@@ -50,7 +51,10 @@ class CookieControl:
       self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.sock.settimeout(0.5)
       self.sock.connect((self.TCP_IP, self.TCP_PORT))
-      self.send_js("Game.Upgrades['One mind'].clickFunction = null") #Disable "One Mind" popup
+      #Disable "One Mind" popup and enable dungeons, disable auto-explore
+      self.send_js('Game.Objects["Factory"].unlockSpecial()')
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;')
+      self.send_js('Game.Upgrades["One mind"].clickFunction = null')
     except:
       print('Could not connect. Make sure FF Remote Control is running on port 32000')
       self.sock.close()
@@ -139,7 +143,38 @@ class CookieControl:
                     'prestige=Game.prestige["Heavenly chips"]-prestige;'
                     'if (prestige!=0) Game.Popup("You earn "+prestige+" heavenly chip"+(prestige==1?"":"s")+"!");')
     self.send_js(hc_calc_js)
+    self.dungeon_entered = False
 
+  def enter_dungeon(self):
+    # Dungeon can be entered without a factory, but it cannot be seen
+    # before a factory is bought. Check for at least 1 factory
+    jstr = self.send_js('Game.Objects["Factory"].amount')
+    num_factories = json.loads(jstr)['result']
+    if int(num_factories) > 0:
+      self.send_js('Game.ObjectsById[3].setSpecial(1)')
+      self.dungeon_entered = True
+
+  # Should not move without being in the dungeon
+  def move_up(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(0,-1)')
+
+  def move_down(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(0,1)')
+
+  def move_left(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(-1,0)')
+
+  def move_right(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(1,0)')
+
+  def move_stay(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(0,0)')
+    
   def __init__(self):
     self.init_control()
 

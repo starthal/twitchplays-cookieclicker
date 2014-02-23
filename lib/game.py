@@ -38,6 +38,12 @@ class Game:
     'collapse',
     'reset',
     'continue',
+    'dungeon',
+    'up',
+    'down',
+    'left',
+    'right',
+    'stay',
     #'unwrinkle',
     #'dunk',
   }
@@ -93,5 +99,17 @@ class Game:
         self.cc.pop_all_wrinklers()
       elif button == 'dunk':
         self.cc.dunk_cookie()
+      elif button == 'dungeon':
+        self.cc.enter_dungeon()
+      elif button == 'up':
+        self.cc.move_up()
+      elif button == 'down':
+        self.cc.move_down()
+      elif button == 'left':
+        self.cc.move_left()
+      elif button == 'right':
+        self.cc.move_right()
+      elif button == 'stay':
+        self.cc.move_stay()     
       self.locked = False
 
