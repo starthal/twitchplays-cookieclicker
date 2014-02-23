@@ -18,19 +18,17 @@ def command(username, command):
     w4.insert(END, '\n{0:<25s} {1:>19s}'.format(username[:25], command[:19]))
     w4.see(END)
 
-def start_timer():
-    global timer
+def start_timer(timer):
     global timerpanel
     timerpanel.delete(1.0, END)
     timerpanel.insert(INSERT, "Pop in "+timer.update_time(), 'center')
     time.sleep(1)
-    start_timer()
+    start_timer(timer)
 
 def run():
     global w4
     global rscroll
     global pscroll
-    global timer
     global timerpanel
 
 
@@ -55,7 +53,6 @@ def run():
     plabel = Label(master, text="Pledge\nCov", background = 'black', foreground='white')
     plabel.grid(row=2, column=2, sticky=W+E+N+S)
 
-    timer = Timer(config['pop_timer']['hours'],config['pop_timer']['minutes'],config['pop_timer']['seconds'])   
     timerpanel = Text (master, font=("Helvetica",28), background='#1E506F', foreground='white', width=10, height=1)
     timerpanel.tag_configure('center', justify='center')
         

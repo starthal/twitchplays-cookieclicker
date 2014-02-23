@@ -11,7 +11,6 @@ class Bot:
     def __init__(self):
         self.config = config
         self.irc = Irc(config)
-        self.game = Game()
 
         self.message_buffer = [{'username': '', 'button': ''}] * 10
 
@@ -22,7 +21,8 @@ class Bot:
         self.message_buffer.pop(0)
 
 
-    def run(self):
+    def run(self, cc):
+        self.game = Game(cc)
         last_start = time.time()
 
         

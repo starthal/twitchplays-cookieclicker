@@ -1,10 +1,14 @@
 #import win32api
 #import win32con
 import time
-import cookiecontrol
 from config.config import config
+from timer import Timer
+from gui import start_timer
 
 class Game:
+
+  def __init__(self, cc):
+    self.cc = cc
 
   BUTTONS = {
     'click',
@@ -39,7 +43,6 @@ class Game:
   }
   
   locked = False
-  cc = cookiecontrol.CookieControl()
 
   def get_valid_buttons(self):
     return [button for button in self.BUTTONS]
