@@ -31,6 +31,7 @@ class Game:
     'antimatter',
     'prism',
     'golden',
+    'santa',
     'reindeer',
     'scrollup',
     'scrolldown',
@@ -75,6 +76,8 @@ class Game:
             self.cc.click_cookie()
       elif button == 'golden':
         self.cc.click_golden()
+      elif button == 'santa':
+        self.cc.upgrade_santa()
       elif button == 'reindeer':
         self.cc.click_reindeer()
       elif button in self.cc.BLDGS:
