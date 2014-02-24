@@ -14,6 +14,7 @@ import socket
 import json
 import sys
 import time
+import thread
 
 
 class CookieControl:
@@ -22,6 +23,8 @@ class CookieControl:
   SCROLL_AMOUNT = 300 # Amount to scroll on scroll_up and scroll_down commands
   last_send = -10 #Arbitrary neg number as nothing has been sent yet
   dungeon_entered = False
+  auto = False
+  auto_start = time.clock()
 
   # Dict of building IDs.
   BLDGS = {
@@ -51,10 +54,11 @@ class CookieControl:
       self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.sock.settimeout(0.5)
       self.sock.connect((self.TCP_IP, self.TCP_PORT))
-      #Disable "One Mind" popup and enable dungeons, disable auto-explore
+      #Disable "One Mind" popup and enable dungeons
       self.send_js('Game.Objects["Factory"].unlockSpecial()')
-      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;')
       self.send_js('Game.Upgrades["One mind"].clickFunction = null')
+      
+      thread.start_new_thread(self.dungeon_auto, ()) #Start dungeon auto thread
     except:
       print('Could not connect. Make sure FF Remote Control is running on port 32000')
       self.sock.close()
@@ -154,26 +158,42 @@ class CookieControl:
       self.send_js('Game.ObjectsById[3].setSpecial(1)')
       self.dungeon_entered = True
 
+  def dungeon_auto(self):
+    while True:
+      if (self.dungeon_entered == True and self.auto == False and time.clock() >= self.auto_start):
+        print str(self.dungeon_entered) + '\n' + str(self.auto) + '\n' + str(self.auto_start) + '\n\n\n'
+        self.send_js('Game.Objects["Factory"].dungeon.auto=1;Game.Objects["Factory"].dungeon.timerWarmup=0;')
+        self.auto = True
+
+  def dungeon_manual(self):
+    self.auto = False
+    self.auto_start = time.clock() + 30
+
   # Should not move without being in the dungeon
   def move_up(self):
     if (self.dungeon_entered == True):
-      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(0,-1)')
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(0,-1)')
+      self.dungeon_manual()
 
   def move_down(self):
     if (self.dungeon_entered == True):
-      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(0,1)')
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(0,1)')
+      self.dungeon_manual()
 
   def move_left(self):
     if (self.dungeon_entered == True):
-      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(-1,0)')
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(-1,0)')
+      self.dungeon_manual()
 
   def move_right(self):
     if (self.dungeon_entered == True):
-      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(1,0)')
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(1,0)')
+      self.dungeon_manual()
 
   def move_stay(self):
     if (self.dungeon_entered == True):
-      self.send_js('Game.Objects["Factory"].dungeon.hero.Move(0,0)')
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(0,0)')
+      self.dungeon_manual()
     
   def __init__(self):
     self.init_control()
