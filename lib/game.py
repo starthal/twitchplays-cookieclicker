@@ -18,6 +18,7 @@ class Game:
     'upgrade3',
     'upgrade4',
     'upgrade5',
+    'nopledge', # Only in bot
     'cursor',
     'grandma',
     'farm',
@@ -37,7 +38,7 @@ class Game:
     'expand',
     'collapse',
     'reset',
-    'continue',
+    'continue', # Only in bot
     'dungeon',
     'up',
     'down',
