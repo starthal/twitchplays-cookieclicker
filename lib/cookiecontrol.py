@@ -103,6 +103,24 @@ class CookieControl:
     # First upgrade has index 0
     self.send_js('Game.UpgradesInStore[{0}].buy()'.format(upgrade_index))
 
+  def upgrade_santa(self):
+    query = (					'var moni=Math.pow(Game.santaLevel+1,Game.santaLevel+1);'
+						'if (Game.cookies>moni && Game.santaLevel<14)'
+						'{'
+						'Game.Spend(moni);'
+						'Game.santaLevel=(Game.santaLevel+1)%15;'
+						'if (Game.santaLevel==14) {Game.Unlock("Santa\'s dominion");Game.Popup("You are granted<br>Santa\'s dominion.");}'
+						'Game.santaTransition=1;'
+						'var drops=[];'
+                                                'for (var i in Game.santaDrops) {if (!Game.HasUnlocked(Game.santaDrops[i])) drops.push(Game.santaDrops[i]);}'
+						'var drop=choose(drops);'
+						'if (drop) {Game.Unlock(drop);Game.Popup("You find a present which contains...<br>"+drop+"!");}'
+							
+						'if (Game.santaLevel>=6) Game.Win("Coming to town");'
+						'if (Game.santaLevel>=14) Game.Win("All hail Santa");'
+						'}')
+    self.send_js(query)
+
   def upgrade_name(self, upgrade_index):
     jstr = self.send_js('Game.UpgradesInStore[{0}].name'.format(upgrade_index))
     try:
