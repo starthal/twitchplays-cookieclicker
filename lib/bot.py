@@ -82,7 +82,7 @@ class Bot:
                         if pledge_counter > 0:
                             pledge_counter -= 1
                             set_pledge_bar(pledge_counter)
-                            suffix = '({0}/{1})'.format(pledge_counter,pledge_counter_max)
+                        suffix = '({0}/{1})'.format(pledge_counter,pledge_counter_max)
                     else:
                         reset_counter -= 1
                         if reset_counter < 0:
