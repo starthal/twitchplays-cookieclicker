@@ -41,6 +41,9 @@ class Bot:
                 button = message['message'].lower()
                 username = message['username'].lower()
                 suffix = ''
+                
+                if button[:12] == "info upgrade":
+					self.irc.se
                 if self.game.is_valid_button(button):
                     if button == 'reset' or button == 'continue': 
                         if button == 'reset':
