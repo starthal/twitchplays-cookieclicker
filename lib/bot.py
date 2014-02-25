@@ -11,7 +11,6 @@ class Bot:
     def __init__(self):
         self.config = config
         self.irc = Irc(config)
-        self.game = Game()
 
         self.message_buffer = [{'username': '', 'button': ''}] * 10
 
@@ -22,7 +21,8 @@ class Bot:
         self.message_buffer.pop(0)
 
 
-    def run(self):
+    def run(self, cc):
+        self.game = Game(cc)
         last_start = time.time()
 
         
@@ -51,6 +51,8 @@ class Bot:
                             if reset_counter >= reset_counter_max:
                                 reset_counter = 0
                                 self.game.push_button('reset')
+                                pledge_counter = 0
+                                set_pledge_bar(pledge_counter)
                         else:
                             reset_counter -= 5
                             if reset_counter < 0:
@@ -72,10 +74,18 @@ class Bot:
                             self.game.push_button(button)
                             pledge_counter = 0
                           set_pledge_bar(pledge_counter)
-                          button = 'Pledge/Cov'
+                          button = 'pledge/cov'
                           suffix = '({0}/{1})'.format(pledge_counter,pledge_counter_max)
                         else:
                           self.game.push_button(button)
+                    elif button == 'nopledge':
+                        reset_counter -= 1
+                        if reset_counter < 0:
+                            reset_counter = 0
+                        if pledge_counter > 0:
+                            pledge_counter -= 1
+                            set_pledge_bar(pledge_counter)
+                        suffix = '({0}/{1})'.format(pledge_counter,pledge_counter_max)
                     else:
                         reset_counter -= 1
                         if reset_counter < 0:

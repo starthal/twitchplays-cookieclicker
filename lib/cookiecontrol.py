@@ -14,6 +14,7 @@ import socket
 import json
 import sys
 import time
+import thread
 
 
 class CookieControl:
@@ -21,6 +22,9 @@ class CookieControl:
   TCP_PORT = 32000 # You can change this port in the FF Remote Control settings
   SCROLL_AMOUNT = 300 # Amount to scroll on scroll_up and scroll_down commands
   last_send = -10 #Arbitrary neg number as nothing has been sent yet
+  dungeon_entered = False
+  auto = False
+  auto_start = time.clock()
 
   # Dict of building IDs.
   BLDGS = {
@@ -50,9 +54,11 @@ class CookieControl:
       self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.sock.settimeout(0.5)
       self.sock.connect((self.TCP_IP, self.TCP_PORT))
-      #Disable "One Mind" popup and autokill wrinklers every 5 hours
-      self.send_js("Game.Upgrades['One mind'].clickFunction = null") 
-      self.send_js("if (!wrinklerkiller) {wrinklerkiller = setInterval(function() { for (var i=0;i<10;i++) { if (Game.wrinklers[i].close==1) {Game.wrinklers[i].hp = 0}}}, 18000000);}")
+      #Disable "One Mind" popup and enable dungeons
+      self.send_js('Game.Objects["Factory"].unlockSpecial()')
+      self.send_js('Game.Upgrades["One mind"].clickFunction = null')
+      
+      thread.start_new_thread(self.dungeon_auto, ()) #Start dungeon auto thread
     except:
       print('Could not connect. Make sure FF Remote Control is running on port 32000')
       self.sock.close()
@@ -96,6 +102,24 @@ class CookieControl:
   def buy_upgrade(self, upgrade_index):
     # First upgrade has index 0
     self.send_js('Game.UpgradesInStore[{0}].buy()'.format(upgrade_index))
+
+  def upgrade_santa(self):
+    query = (					'var moni=Math.pow(Game.santaLevel+1,Game.santaLevel+1);'
+						'if (Game.cookies>moni && Game.santaLevel<14)'
+						'{'
+						'Game.Spend(moni);'
+						'Game.santaLevel=(Game.santaLevel+1)%15;'
+						'if (Game.santaLevel==14) {Game.Unlock("Santa\'s dominion");Game.Popup("You are granted<br>Santa\'s dominion.");}'
+						'Game.santaTransition=1;'
+						'var drops=[];'
+                                                'for (var i in Game.santaDrops) {if (!Game.HasUnlocked(Game.santaDrops[i])) drops.push(Game.santaDrops[i]);}'
+						'var drop=choose(drops);'
+						'if (drop) {Game.Unlock(drop);Game.Popup("You find a present which contains...<br>"+drop+"!");}'
+							
+						'if (Game.santaLevel>=6) Game.Win("Coming to town");'
+						'if (Game.santaLevel>=14) Game.Win("All hail Santa");'
+						'}')
+    self.send_js(query)
 
   def upgrade_name(self, upgrade_index):
     jstr = self.send_js('Game.UpgradesInStore[{0}].name'.format(upgrade_index))
@@ -141,7 +165,54 @@ class CookieControl:
                     'prestige=Game.prestige["Heavenly chips"]-prestige;'
                     'if (prestige!=0) Game.Popup("You earn "+prestige+" heavenly chip"+(prestige==1?"":"s")+"!");')
     self.send_js(hc_calc_js)
+    self.dungeon_entered = False
 
+  def enter_dungeon(self):
+    # Dungeon can be entered without a factory, but it cannot be seen
+    # before a factory is bought. Check for at least 1 factory
+    jstr = self.send_js('Game.Objects["Factory"].amount')
+    num_factories = json.loads(jstr)['result']
+    if int(num_factories) > 0:
+      self.send_js('Game.ObjectsById[3].setSpecial(1)')
+      self.dungeon_entered = True
+
+  def dungeon_auto(self):
+    while True:
+      if (self.dungeon_entered == True and self.auto == False and time.clock() >= self.auto_start):
+        print str(self.dungeon_entered) + '\n' + str(self.auto) + '\n' + str(self.auto_start) + '\n\n\n'
+        self.send_js('Game.Objects["Factory"].dungeon.auto=1;Game.Objects["Factory"].dungeon.timerWarmup=0;')
+        self.auto = True
+
+  def dungeon_manual(self):
+    self.auto = False
+    self.auto_start = time.clock() + 30
+
+  # Should not move without being in the dungeon
+  def move_up(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(0,-1)')
+      self.dungeon_manual()
+
+  def move_down(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(0,1)')
+      self.dungeon_manual()
+
+  def move_left(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(-1,0)')
+      self.dungeon_manual()
+
+  def move_right(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(1,0)')
+      self.dungeon_manual()
+
+  def move_stay(self):
+    if (self.dungeon_entered == True):
+      self.send_js('Game.Objects["Factory"].dungeon.auto=0;Game.Objects["Factory"].dungeon.timerWarmup=-1;Game.Objects["Factory"].dungeon.hero.Move(0,0)')
+      self.dungeon_manual()
+    
   def __init__(self):
     self.init_control()
 
