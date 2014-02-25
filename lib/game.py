@@ -46,8 +46,9 @@ class Game:
     'left',
     'right',
     'stay',
+    'dunk',
+    'pop',
     #'unwrinkle',
-    #'dunk',
   }
   
   locked = False
