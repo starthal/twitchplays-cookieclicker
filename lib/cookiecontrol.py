@@ -21,7 +21,7 @@ class CookieControl:
   TCP_IP = '127.0.0.1'
   TCP_PORT = 32000 # You can change this port in the FF Remote Control settings
   SCROLL_AMOUNT = 300 # Amount to scroll on scroll_up and scroll_down commands
-  last_send = -10 #Arbitrary neg number as nothing has been sent yet
+  last_send = -10 # Arbitrary neg number as nothing has been sent yet
   dungeon_entered = False
   auto = False
   auto_start = time.clock()
@@ -104,7 +104,7 @@ class CookieControl:
     self.send_js('Game.UpgradesInStore[{0}].buy()'.format(upgrade_index))
 
   def upgrade_santa(self):
-    query = (					'var moni=Math.pow(Game.santaLevel+1,Game.santaLevel+1);'
+    query = (			'var moni=Math.pow(Game.santaLevel+1,Game.santaLevel+1);'
 						'if (Game.cookies>moni && Game.santaLevel<14)'
 						'{'
 						'Game.Spend(moni);'
@@ -112,7 +112,7 @@ class CookieControl:
 						'if (Game.santaLevel==14) {Game.Unlock("Santa\'s dominion");Game.Popup("You are granted<br>Santa\'s dominion.");}'
 						'Game.santaTransition=1;'
 						'var drops=[];'
-                                                'for (var i in Game.santaDrops) {if (!Game.HasUnlocked(Game.santaDrops[i])) drops.push(Game.santaDrops[i]);}'
+                        'for (var i in Game.santaDrops) {if (!Game.HasUnlocked(Game.santaDrops[i])) drops.push(Game.santaDrops[i]);}'
 						'var drop=choose(drops);'
 						'if (drop) {Game.Unlock(drop);Game.Popup("You find a present which contains...<br>"+drop+"!");}'
 							
