@@ -8,8 +8,19 @@ from config.config import config
 from threading import Thread
 import lib.gui as gui
 import lib.bot as bot
+from lib.timer import Timer
+import time
+import lib.cookiecontrol as cookiecontrol
+
+cc = cookiecontrol.CookieControl()
 
 thread1 = Thread(target = gui.run)
 thread1.start()
-thread1 = Thread(target = bot.Bot().run)
+thread1 = Thread(target = bot.Bot().run, args=(cc,))
 thread1.start()
+
+timer = Timer(cc, config['pop_timer']['hours'],config['pop_timer']['minutes'],config['pop_timer']['seconds'])
+
+thread1 = Thread(target = gui.start_timer, args=(timer,))
+thread1.start()
+

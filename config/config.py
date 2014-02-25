@@ -6,8 +6,8 @@ config = {
     },
 
     'account': {
-        'username': 'pk_kolo9',
-        'password': 'oauth:sekjbjdmxvvzn67dhbj3t1i08fz241l' # http://twitchapps.com/tmi/
+        'username': 'name',
+        'password': 'oauth:key' # http://twitchapps.com/tmi/
     },
 
     'reset_bar': {
@@ -16,8 +16,14 @@ config = {
     },
     
     'pledge_bar': {
-		'enable' : True,
-		'max' : 50,
-		'vote' : 1,
-	},
+	'enable' : True,
+	'max' : 50,
+	'vote' : 1,
+    },
+
+    'pop_timer': {
+        'hours' : 5,
+        'minutes' : 0,
+        'seconds' : 0
+    }
 }

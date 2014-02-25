@@ -1,10 +1,14 @@
 #import win32api
 #import win32con
 import time
-import cookiecontrol
 from config.config import config
+from timer import Timer
+from gui import start_timer
 
 class Game:
+
+  def __init__(self, cc):
+    self.cc = cc
 
   BUTTONS = {
     'click',
@@ -14,6 +18,7 @@ class Game:
     'upgrade3',
     'upgrade4',
     'upgrade5',
+    'nopledge', # Only in bot
     'cursor',
     'grandma',
     'farm',
@@ -26,6 +31,7 @@ class Game:
     'antimatter',
     'prism',
     'golden',
+    'santa',
     'reindeer',
     'scrollup',
     'scrolldown',
@@ -33,13 +39,18 @@ class Game:
     'expand',
     'collapse',
     'reset',
-    'continue',
+    'continue', # Only in bot
+    'dungeon',
+    'up',
+    'down',
+    'left',
+    'right',
+    'stay',
     #'unwrinkle',
     #'dunk',
   }
   
   locked = False
-  cc = cookiecontrol.CookieControl()
 
   def get_valid_buttons(self):
     return [button for button in self.BUTTONS]
@@ -65,6 +76,8 @@ class Game:
             self.cc.click_cookie()
       elif button == 'golden':
         self.cc.click_golden()
+      elif button == 'santa':
+        self.cc.upgrade_santa()
       elif button == 'reindeer':
         self.cc.click_reindeer()
       elif button in self.cc.BLDGS:
@@ -90,5 +103,17 @@ class Game:
         self.cc.pop_all_wrinklers()
       elif button == 'dunk':
         self.cc.dunk_cookie()
+      elif button == 'dungeon':
+        self.cc.enter_dungeon()
+      elif button == 'up':
+        self.cc.move_up()
+      elif button == 'down':
+        self.cc.move_down()
+      elif button == 'left':
+        self.cc.move_left()
+      elif button == 'right':
+        self.cc.move_right()
+      elif button == 'stay':
+        self.cc.move_stay()     
       self.locked = False
 
