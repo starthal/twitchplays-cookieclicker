@@ -6,8 +6,7 @@ config = {
     },
 
     'account': {
-        'username': 'name',
-        'password': 'oauth:key' # http://twitchapps.com/tmi/
+
     },
 
     'reset_bar': {
@@ -19,6 +18,11 @@ config = {
 	'enable' : True,
 	'max' : 50,
 	'vote' : 1,
+    },
+    
+    'pop_bar': {
+	'enable' : True,
+	'max' : 25,
     },
 
     'pop_timer': {
