@@ -6,7 +6,8 @@ config = {
     },
 
     'account': {
-
+        'username': 'starthal',
+        'password': 'oauth:a4mjj2sjzfvfpph5426wmm0fdtnl4np' # http://twitchapps.com/tmi/
     },
 
     'reset_bar': {
