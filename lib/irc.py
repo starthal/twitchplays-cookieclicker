@@ -54,6 +54,10 @@ class Irc:
         if data.startswith('PING'):
             self.sock.send(data.replace('PING', 'PONG'))
 
+    def talk(self, text):
+		chan = self.config['account']['username'].lower()
+		self.sock.send('PRIVMSG ' + chan + ' ' + text + '\n')
+
     def recv(self, amount=1024):
         return self.sock.recv(amount)
 

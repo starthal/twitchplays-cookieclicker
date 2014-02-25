@@ -26,10 +26,12 @@ class Bot:
         last_start = time.time()
 
         
-        reset_counter_max = self.config['reset_bar']['max']
         reset_counter = 0
+        reset_counter_max = self.config['reset_bar']['max']
         pledge_counter = 0
         pledge_counter_max = config['pledge_bar']['max']
+        pop_counter = 0
+        pop_counter_max = config['pop_bar']['max']
 
         while True:
             new_messages = self.irc.recv_messages(1024)
@@ -42,10 +44,20 @@ class Bot:
                 username = message['username'].lower()
                 suffix = ''
                 
-                if button[:12] == "info upgrade":
-					self.irc.se
-                if self.game.is_valid_button(button):
-                    if button == 'reset' or button == 'continue': 
+                if button[:12] == 'info upgrade':
+                    if len(button) > 12:
+                        upgrade_ind = int(button[12])-1
+                    else:
+                        upgrade_ind = 0
+                    self.irc.send('UPGRADE' + str(upgrade_ind) + ': ' + upgrade_name)
+                elif self.game.is_valid_button(button):
+                    if button == 'pop':
+                        pop_counter += 1
+                        if pop_counter >= pop_counter_max:
+                            pop_counter = 0
+                            self.game.push_button('unwrinkle')
+                        set_pop_bar(pop_counter)
+                    elif button == 'reset' or button == 'continue': 
                         if button == 'reset':
                             reset_counter += 5
                             if reset_counter >= reset_counter_max:

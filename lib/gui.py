@@ -5,6 +5,10 @@ from config.config import config
 from timer import Timer
 import time
 
+def set_pop_bar(pop_counter):
+	global wscroll
+	wscroll.set(pop_counter)
+
 def set_pledge_bar(pledge_counter):
     global pscroll
     pscroll.set(pledge_counter)
@@ -24,7 +28,6 @@ def start_timer(timer):
         time.sleep(1)
         timerpanel.delete(1.0, END)
         timerpanel.insert(INSERT, "Pop in "+timer.update_time(), 'center')
-
 
 def run():
     global w4
@@ -48,11 +51,18 @@ def run():
 		pscroll = Scale(master, from_=pscroll_max, to=0, highlightthickness=0, activebackground='#1E506F', state=ACTIVE, borderwidth=0, background='black', foreground='white', troughcolor='white')
 		pscroll.grid(row=1, column=2, sticky=W+E+N+S)
 
-    rlabel = Label(master, text="Reset", background='black', foreground='#FF1144')
+    if config['pop_bar']['enable']:
+        wscroll_max = config['pop_bar']['max']
+        wscroll = Scale(master, from_=wscroll_max, to=0, highlightthickness=0, activebackground='#1E506F', state=ACTIVE, borderwidth=0, background='black', foreground='white', troughcolor='blue')
+
+    rlabel = Label(master, text='Reset', background='black', foreground='#FF1144')
     rlabel.grid(row=2, column=1, sticky=W+E+N+S)
 
-    plabel = Label(master, text="Pledge\nCov", background = 'black', foreground='white')
+    plabel = Label(master, text='Pledge\nCov', background = 'black', foreground='white')
     plabel.grid(row=2, column=2, sticky=W+E+N+S)
+    
+    wlabel = Label(master, text='Pop', background = 'black', foreground='blue')
+    wlabel.grid(row=2, column=3, sticky=W+E+N+S)
 
     timerpanel = Text (master, font=("Helvetica",28), background='#1E506F', foreground='white', width=10, height=1)
     timerpanel.tag_configure('center', justify='center')
