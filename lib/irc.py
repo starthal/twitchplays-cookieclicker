@@ -56,7 +56,7 @@ class Irc:
 
     def say(self, text):
 		chan = '#' + self.config['account']['username'].lower()
-		data = ' ' + text + '\r\n' #'/PRIVMSG ' + chan + 
+		data = 'PRIVMSG ' + chan + ' :' + text + '\r\n' #'/
 		print(data)
 		self.sock.send(data)
 

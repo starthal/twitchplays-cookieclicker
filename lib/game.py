@@ -59,8 +59,8 @@ class Game:
   def is_valid_button(self, button):
     return button in self.BUTTONS
 
-  def upgrade_name(self, upgrade_ind):
-    return self.cc.upgrade_name(upgrade_ind)
+  def get_upgrade_name(self, upgrade_ind):
+    return self.cc.get_upgrade_name(upgrade_ind)
 
   def push_button(self, button):
   

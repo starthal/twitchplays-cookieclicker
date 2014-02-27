@@ -74,6 +74,7 @@ class CookieControl:
       time.sleep(.05 - elapsedtime)
     self.sock.send(js_line)
     self.last_send = time.clock()
+    time.sleep(.02)
     try:
       ret = self.sock.recv(4096)
     except:
@@ -121,13 +122,25 @@ class CookieControl:
 						'}')
     self.send_js(query)
 
-  def upgrade_name(self, upgrade_index):
+  def get_upgrade_name(self, upgrade_index):
     jstr = self.send_js('Game.UpgradesInStore[{0}].name'.format(upgrade_index))
+    print(jstr)
+    time.sleep(0.1)
     try:
-      name = json.loads(jstr)['result']
-    except KeyError:
-      name = 'x'
+      name = str(json.loads(jstr)['result'])
+    except:
+      name = 'undefined'
     return name
+    
+  def get_upgrade_price(self, upgrade_index):
+    jstr = self.send_js('Game.UpgradesInStore[{0}].basePrice'.format(upgrade_index))
+    print(jstr)
+    time.sleep(0.1)
+    try:
+      num = int(json.loads(jstr)['result'])
+    except:
+      num = 0
+    return num
 
   def pop_all_wrinklers(self):
     self.send_js('Game.CollectWrinklers()')
