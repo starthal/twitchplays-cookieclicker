@@ -52,7 +52,7 @@ class Bot:
                     upgrade_name = self.game.cc.upgrade_name(upgrade_ind)
                     self.irc.say('UPGRADE' + str(upgrade_ind+1) + ': ' + upgrade_name)
                 elif self.game.is_valid_button(button):
-                    if button == 'pop':
+                    if button == 'pop' and config['pop_bar']['enable']:
                         pop_counter += 1
                         if pop_counter >= pop_counter_max:
                             pop_counter = 0
@@ -80,7 +80,7 @@ class Bot:
                         else:
                             upgrade_ind = int(button[7])-1
                         name = self.game.upgrade_name(upgrade_ind)
-                        if name == 'Elder Pledge' or name == 'Elder Covenant' or name == 'Revoke Elder Covenant':
+                        if config['pledge_bar']['enable'] and (name == 'Elder Pledge' or name == 'Elder Covenant' or name == 'Revoke Elder Covenant'):
                           # Throttle pledges if necessary
                           pledge_counter += 1
                           if pledge_counter >= pledge_counter_max:
