@@ -4,7 +4,7 @@ from config.config import config
 from lib.irc import Irc
 from lib.game import Game
 from lib.misc import pbutton
-from lib.gui import command, set_reset_bar, set_pledge_bar
+from lib.gui import *
 
 class Bot:
 
@@ -49,7 +49,8 @@ class Bot:
                         upgrade_ind = int(button[12])-1
                     else:
                         upgrade_ind = 0
-                    self.irc.send('UPGRADE' + str(upgrade_ind) + ': ' + upgrade_name)
+                    upgrade_name = self.game.cc.upgrade_name(upgrade_ind)
+                    self.irc.say('UPGRADE' + str(upgrade_ind+1) + ': ' + upgrade_name)
                 elif self.game.is_valid_button(button):
                     if button == 'pop':
                         pop_counter += 1

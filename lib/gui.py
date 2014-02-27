@@ -33,6 +33,7 @@ def run():
     global w4
     global rscroll
     global pscroll
+    global wscroll
     global timerpanel
 
 
@@ -54,6 +55,7 @@ def run():
     if config['pop_bar']['enable']:
         wscroll_max = config['pop_bar']['max']
         wscroll = Scale(master, from_=wscroll_max, to=0, highlightthickness=0, activebackground='#1E506F', state=ACTIVE, borderwidth=0, background='black', foreground='white', troughcolor='blue')
+        wscroll.grid(row=1, column=3, sticky=W+E+N+S)
 
     rlabel = Label(master, text='Reset', background='black', foreground='#FF1144')
     rlabel.grid(row=2, column=1, sticky=W+E+N+S)
