@@ -80,7 +80,7 @@ class Bot:
                             upgrade_ind = 0
                         else:
                             upgrade_ind = int(button[7])-1
-                        name = self.game.upgrade_name(upgrade_ind)
+                        name = self.game.cc.get_upgrade_name(upgrade_ind)
                         if config['pledge_bar']['enable'] and (name == 'Elder Pledge' or name == 'Elder Covenant' or name == 'Revoke Elder Covenant'):
                           # Throttle pledges if necessary
                           pledge_counter += 1

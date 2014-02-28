@@ -7,7 +7,8 @@ config = {
 
     'account': {
         'username': '',
-        'password': '' # http://twitchapps.com/tmi/
+        'password': '', # http://twitchapps.com/tmi/
+	'channel': '', # no hash before channel name
     },
 
     'reset_bar': {

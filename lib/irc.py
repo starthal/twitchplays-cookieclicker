@@ -20,6 +20,7 @@ class Irc:
 
         username = self.config['account']['username'].lower()
         password = self.config['account']['password']
+        channel = self.config['account']['channel'].lower()
 
         server = self.config['irc']['server']
         port = self.config['irc']['port']
@@ -47,15 +48,15 @@ class Irc:
         else:
             pp('Login successful!')
 
-        sock.send('JOIN #%s\r\n' % username)
-        pp('Joined #%s' % username)
+        sock.send('JOIN #%s\r\n' % channel)
+        pp('Joined #%s' % channel)
 
     def ping(self, data):
         if data.startswith('PING'):
             self.sock.send(data.replace('PING', 'PONG'))
 
     def say(self, text):
-		chan = '#' + self.config['account']['username'].lower()
+		chan = '#' + self.config['account']['channel'].lower()
 		data = 'PRIVMSG ' + chan + ' :' + text + '\r\n' #'/
 		print(data)
 		self.sock.send(data)
