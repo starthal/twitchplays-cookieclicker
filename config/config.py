@@ -6,8 +6,8 @@ config = {
     },
 
     'account': {
-        'username': 'starthal',
-        'password': 'oauth:a4mjj2sjzfvfpph5426wmm0fdtnl4np', # http://twitchapps.com/tmi/
+        'username': 'TwitchPlaysCC',
+        'password': 'oauth:mx76apfewwd07nvaj5tbajv0tu9zp70', # http://twitchapps.com/tmi/
 	'channel': 'pk_kolo9',
     },
 

@@ -50,8 +50,31 @@ class Bot:
                     else:
                         upgrade_ind = 0
                     upgrade_name = self.game.cc.get_upgrade_name(upgrade_ind)
-                    upgrade_price = str(self.game.cc.get_upgrade_price(upgrade_ind))
-                    self.irc.say('UPGRADE' + str(upgrade_ind+1) + ': ' + upgrade_name + ' (' + upgrade_price + ')')
+                    numdivs = 0
+                    upgrade_price = self.game.cc.get_upgrade_price(upgrade_ind)
+                    if upgrade_price > 1000000:
+                        upgrade_price = float(upgrade_price) / 1000000
+                        numdivs += 1
+                        while upgrade_price > 1000:
+                            upgrade_price = float(upgrade_price) / 1000
+                            numdivs += 1
+                    pricesuffix = ''
+                    if numdivs == 1:
+                        pricesuffix = ' M'
+                    elif numdivs == 2:
+                        pricesuffix = ' B'
+                    elif numdivs == 3:
+                        pricesuffix = ' T'
+                    elif numdivs == 4:
+                        pricesuffix = ' Qa'
+                    elif numdivs == 5:
+                        pricesuffix = ' Qi'
+                    elif numdivs == 6:
+                        pricesuffix = ' Sx'
+                    elif numdivs == 7:
+                        pricesuffix = ' Sp'
+                    short_price = "%.3f%s" % (upgrade_price, pricesuffix)
+                    self.irc.say('UPGRADE' + str(upgrade_ind+1) + ': ' + upgrade_name + ' (' + short_price + ')')
                 elif self.game.is_valid_button(button):
                     if button == 'pop' and config['pop_bar']['enable']:
                         pop_counter += 1
