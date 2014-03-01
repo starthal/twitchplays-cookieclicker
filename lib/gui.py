@@ -59,12 +59,13 @@ def run():
 
     rlabel = Label(master, text='Reset', background='black', foreground='#FF1144')
     rlabel.grid(row=2, column=1, sticky=W+E+N+S)
-
-    plabel = Label(master, text='Pledge\nCov', background = 'black', foreground='white')
-    plabel.grid(row=2, column=2, sticky=W+E+N+S)
+    if config['pledge_bar']['enable']:
+      plabel = Label(master, text='Pledge\nCov', background = 'black', foreground='white')
+      plabel.grid(row=2, column=2, sticky=W+E+N+S)
     
-    wlabel = Label(master, text='Pop', background = 'black', foreground='blue')
-    wlabel.grid(row=2, column=3, sticky=W+E+N+S)
+    if config['pop_bar']['enable']:
+      wlabel = Label(master, text='Pop', background = 'black', foreground='blue')
+      wlabel.grid(row=2, column=3, sticky=W+E+N+S)
 
     timerpanel = Text (master, font=("Helvetica",28), background='#1E506F', foreground='white', width=10, height=1)
     timerpanel.tag_configure('center', justify='center')
