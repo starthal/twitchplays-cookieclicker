@@ -16,7 +16,10 @@ cc = cookiecontrol.CookieControl()
 
 thread1 = Thread(target = gui.run)
 thread1.start()
-thread1 = Thread(target = bot.Bot().run, args=(cc,))
+botinst = bot.Bot()
+thread1 = Thread(target = botinst.run, args=(cc,))
+thread1.start()
+thread1 = Thread(target = botinst.start_golden_timer, args=(cc,))
 thread1.start()
 
 timer = Timer(cc, config['pop_timer']['hours'],config['pop_timer']['minutes'],config['pop_timer']['seconds'])

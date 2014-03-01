@@ -86,9 +86,17 @@ class CookieControl:
 
   def click_golden(self):
     self.send_js('Game.goldenCookie.click()')
+
+  def get_golden_life(self):
+    jstr = self.send_js('Game.goldenCookie.life')
+    return json.loads(jstr)['result']
     
   def click_reindeer(self):
     self.send_js('Game.seasonPopup.click()')
+
+  def get_reindeer_life(self):
+    jstr = self.send_js('Game.seasonPopup.life')
+    return json.loads(jstr)['result']
 
   def buy_building(self, bldg_name):
     bldg_id = self.BLDGS[bldg_name]

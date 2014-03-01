@@ -20,6 +20,24 @@ class Bot:
         self.message_buffer.insert(chat_height - 1, message)
         self.message_buffer.pop(0)
 
+    def start_golden_timer(self, cc):
+        has_alerted_golden = False
+        has_alerted_reindeer = False
+        while True:
+            time.sleep(1)
+            golden_life = cc.get_golden_life()
+            reindeer_life = cc.get_reindeer_life()
+            if golden_life == 0:
+                has_alerted_golden = False
+            elif golden_life >= 0 and has_alerted_golden == False:
+                self.irc.say('GOLDEN!!!')
+                has_alerted_golden = True
+
+            if reindeer_life == 0:
+                has_alerted_reinder = False
+            elif reindeer_life >= 0 and has_alerted_reindeer == False:
+                self.irc.say('REINDEER!!!')
+                has_alerted_reindeer = True
 
     def run(self, cc):
         self.game = Game(cc)
@@ -32,6 +50,7 @@ class Bot:
         pledge_counter_max = config['pledge_bar']['max']
         pop_counter = 0
         pop_counter_max = config['pop_bar']['max']
+        next_golden = time.clock() + 5
 
         while True:
             new_messages = self.irc.recv_messages(1024)
@@ -46,35 +65,46 @@ class Bot:
                 
                 if button[:12] == 'info upgrade':
                     if len(button) > 12:
-                        upgrade_ind = int(button[12])-1
+                        try:
+                            upgrade_ind = int(button[12])-1
+                        except:
+                            upgrade_ind = -1
                     else:
                         upgrade_ind = 0
                     upgrade_name = self.game.cc.get_upgrade_name(upgrade_ind)
-                    numdivs = 0
-                    upgrade_price = self.game.cc.get_upgrade_price(upgrade_ind)
-                    if upgrade_price > 1000000:
-                        upgrade_price = float(upgrade_price) / 1000000
-                        numdivs += 1
-                        while upgrade_price > 1000:
-                            upgrade_price = float(upgrade_price) / 1000
+                    if upgrade_name == 'undefined':
+                        self.irc.say('Invalid Upgrade')
+                    else:
+                        numdivs = 0
+                        upgrade_price = self.game.cc.get_upgrade_price(upgrade_ind)
+                        if upgrade_price > 1000000:
+                            upgrade_price = float(upgrade_price) / 1000000
                             numdivs += 1
-                    pricesuffix = ''
-                    if numdivs == 1:
-                        pricesuffix = ' M'
-                    elif numdivs == 2:
-                        pricesuffix = ' B'
-                    elif numdivs == 3:
-                        pricesuffix = ' T'
-                    elif numdivs == 4:
-                        pricesuffix = ' Qa'
-                    elif numdivs == 5:
-                        pricesuffix = ' Qi'
-                    elif numdivs == 6:
-                        pricesuffix = ' Sx'
-                    elif numdivs == 7:
-                        pricesuffix = ' Sp'
-                    short_price = "%.3f%s" % (upgrade_price, pricesuffix)
-                    self.irc.say('UPGRADE' + str(upgrade_ind+1) + ': ' + upgrade_name + ' (' + short_price + ')')
+                            while upgrade_price > 1000:
+                                upgrade_price = float(upgrade_price) / 1000
+                                numdivs += 1
+                        if numdivs == 0:
+                            pricesuffix = ''
+                        elif numdivs == 1:
+                            pricesuffix = ' M'
+                        elif numdivs == 2:
+                            pricesuffix = ' B'
+                        elif numdivs == 3:
+                            pricesuffix = ' T'
+                        elif numdivs == 4:
+                            pricesuffix = ' Qa'
+                        elif numdivs == 5:
+                            pricesuffix = ' Qi'
+                        elif numdivs == 6:
+                            pricesuffix = ' Sx'
+                        elif numdivs == 7:
+                            pricesuffix = ' Sp'
+                        elif numdivs == 8:
+                            pricesuffix = ' O'
+                        short_price = "%.3f%s" % (upgrade_price, pricesuffix)
+                        self.irc.say('UPGRADE' + str(upgrade_ind+1) + ': ' + upgrade_name + ' (' + short_price + ')')
+                elif button == '!commands':
+                    self.irc.say('Clickclick..., Golden, Reindeer, Dungeon, Up, Down, Left, Right, Stay, Upgrade1 - Upgrade5, Info UpgradeX, NoPledge, Santa, Cursor, Grandma, Farm, Factory, Mine, Shipment, Lab, Portal, Time, Antimatter, Prism, View, Scrolldown, Scrollup, Expand, Collapse, Reset, Continue')
                 elif self.game.is_valid_button(button):
                     if button == 'pop' and config['pop_bar']['enable']:
                         pop_counter += 1
