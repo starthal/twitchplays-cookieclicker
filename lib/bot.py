@@ -27,15 +27,17 @@ class Bot:
             time.sleep(1)
             golden_life = cc.get_golden_life()
             reindeer_life = cc.get_reindeer_life()
+            print str(golden_life) + str(has_alerted_golden)
+            print str(reindeer_life) + str(has_alerted_reindeer)
             if golden_life == 0:
                 has_alerted_golden = False
-            elif golden_life >= 0 and has_alerted_golden == False:
+            elif golden_life > 0 and has_alerted_golden == False:
                 self.irc.say('GOLDEN!!!')
                 has_alerted_golden = True
 
             if reindeer_life == 0:
-                has_alerted_reinder = False
-            elif reindeer_life >= 0 and has_alerted_reindeer == False:
+                has_alerted_reindeer = False
+            elif reindeer_life > 0 and has_alerted_reindeer == False:
                 self.irc.say('REINDEER!!!')
                 has_alerted_reindeer = True
 
